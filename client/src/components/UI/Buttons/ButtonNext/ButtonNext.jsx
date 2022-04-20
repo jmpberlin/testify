@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 
 const ButtonNext = (props) => {
   return (
-    <button type={props.type} disabled={props.disabled}>
-      <Link to={props.to}>{props.children}</Link>
-    </button>
+    <Link to={props.to}>
+      <button disabled={props.disabled}>{props.children}</button>
+    </Link>
   );
 };
 
