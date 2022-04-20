@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { AppointmentContextProvider } from './stores/AppointmentContext';
+import { AppointmentContextProvider } from './components/stores/appointment-context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -1,17 +1,25 @@
 import './App.css';
-import { Router, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AppointmentDate from './components/user/AppointmentCreation/AppointmentDate/AppointmentDate';
+import AppointmentDetails from './components/user/AppointmentCreation/AppointmentDetails/AppointmentDetails';
 
 function App() {
   return (
     <div>
-      <Router>
-        <Route
-          exact
-          path='/appointments/date'
-          component={AppointmentDate}
-        ></Route>
-      </Router>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            exact
+            path='/appointments/date'
+            element={<AppointmentDate />}
+          ></Route>
+          <Route
+            exact
+            path='/appointments/details'
+            element={<AppointmentDetails />}
+          ></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

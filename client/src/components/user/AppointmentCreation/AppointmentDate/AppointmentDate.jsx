@@ -5,7 +5,7 @@ import BackgroundWrapper from '../../../UI/Wrappers/BackgroundWrapper/Background
 import TitleBox from '../../../UI/Boxes/TitleBox/TitleBox';
 import axios from 'axios';
 import TimeSlotWrapper from './TimeSlotWrapper/TimeSlotWrapper';
-import AppointmentContext from '../../../../stores/appointment-context';
+import AppointmentContext from '../../../stores/appointment-context';
 const AppointmentDate = (props) => {
   const appoCtx = useContext(AppointmentContext);
 

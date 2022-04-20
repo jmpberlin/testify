@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const ButtonNext = (props) => {
+const ButtonBack = (props) => {
   return (
-    <button type={props.type} disabled={props.disabled}>
+    <button>
       <Link to={props.to}>{props.children}</Link>
     </button>
   );
 };
-
-export default ButtonNext;
+export default ButtonBack;
