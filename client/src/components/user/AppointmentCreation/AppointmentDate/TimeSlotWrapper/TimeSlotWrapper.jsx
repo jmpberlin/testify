@@ -1,9 +1,18 @@
 import React from 'react';
-
-const TimeSlotWrapper = () => {
+import styles from './TimeSlotWrapper.module.css';
+import TimeSlot from '../TimeSlot/TimeSlot';
+const TimeSlotWrapper = (props) => {
   return (
-    <div>
-      <h1>hallo!</h1>
+    <div className={styles.time_slot_wrapper}>
+      {props.timeSlotArray.map((slot) => {
+        return (
+          <TimeSlot
+            key={slot.id}
+            id={slot.id}
+            start_time={slot.start_time}
+          ></TimeSlot>
+        );
+      })}
     </div>
   );
 };

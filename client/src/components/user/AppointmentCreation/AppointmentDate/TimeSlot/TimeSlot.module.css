@@ -1,0 +1,12 @@
+.time_slot {
+  margin: 3px;
+  padding: 2px;
+  border: 1px solid black;
+}
+
+.time_slot:hover {
+  background-color: yellow;
+}
+p {
+  margin: 0;
+}

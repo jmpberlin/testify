@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
-const AppointmentContext = React.createContext({});
+const AppointmentContext = React.createContext({
+  transmitTimeslotId: () => {},
+});
 
 export const AppointmentContextProvider = (props) => {
   const [timeslotId, setTimeslotId] = useState(0);
