@@ -14,7 +14,7 @@ const AppointmentDate = (props) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [timeslotIsSelected, setTimeslotIsSelected] = useState(false);
   const onSubmitHandler = (e) => {
-    // e.preventDefault();
+    appoCtx.saveTimeslot();
   };
   const onSelectDateHandler = (e) => {
     if (e.target.value && e.target.value !== selectedDate) {

@@ -6,8 +6,18 @@ const TimeSlot = (props) => {
   const appoCtx = useContext(AppointmentContext);
   const selectAppointmentHandler = () => {
     appoCtx.transmitTimeslotId(props.id);
+    appoCtx.transmitHumanTime(`${hours}:${minutes}`);
+    appoCtx.transmitHumanDate(dateObj.toLocaleDateString('de-DE', options));
+  };
+  var options = {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
   };
   let dateObj = new Date(props.start_time);
+
   const hours = dateObj.getHours();
   const minutes = dateObj.getMinutes();
   return (
