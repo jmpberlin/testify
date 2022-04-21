@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const ButtonBack = (props) => {
   return (
-    <button>
+    <button onClick={props.onClick}>
       <Link to={props.to}>{props.children}</Link>
     </button>
   );

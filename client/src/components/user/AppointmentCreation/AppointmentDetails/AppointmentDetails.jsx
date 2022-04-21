@@ -4,9 +4,14 @@ import ButtonBack from '../../../UI/Buttons/ButtonBack/ButtonBack';
 import AppointmentPreview from '../../../UI/Dates/AppointmentPreview/AppointmentPreview';
 import AppointmentContext from '../../../stores/appointment-context';
 const AppointmentDetails = () => {
+  const appoCtx = useContext(AppointmentContext);
+  function onClickBackHandler() {
+    console.log('you still have to delete the localStorage items!');
+    appoCtx.transmitTimeslotId(0);
+  }
   const [humanDate, setHumanDate] = useState(null);
   const [humanTime, setHumanTime] = useState(null);
-  const appoCtx = useContext(AppointmentContext);
+
   useEffect(() => {
     setHumanDate(localStorage.getItem('humanDate'));
     setHumanTime(localStorage.getItem('humanTime'));
@@ -19,7 +24,9 @@ const AppointmentDetails = () => {
         humanTime={humanTime}
         humanDate={humanDate}
       ></AppointmentPreview>
-      <ButtonBack to='/appointments/date'>Back</ButtonBack>
+      <ButtonBack onClick={onClickBackHandler} to='/appointments/date'>
+        Back
+      </ButtonBack>
     </div>
   );
 };
