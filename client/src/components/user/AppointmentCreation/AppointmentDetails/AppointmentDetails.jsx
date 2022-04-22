@@ -3,6 +3,8 @@ import { useContext, useEffect, useState } from 'react';
 import ButtonBack from '../../../UI/Buttons/ButtonBack/ButtonBack';
 import AppointmentPreview from '../../../UI/Dates/AppointmentPreview/AppointmentPreview';
 import AppointmentContext from '../../../stores/appointment-context';
+import BackgroundWrapper from '../../../UI/Wrappers/BackgroundWrapper/BackgroundWrapper';
+import AppointmentDetailsEditForm from '../../../UI/Appointments/AppointmentDetailsEditForm/AppointmentDetailsEditForm';
 const AppointmentDetails = () => {
   const appoCtx = useContext(AppointmentContext);
   function onClickBackHandler() {
@@ -18,16 +20,22 @@ const AppointmentDetails = () => {
   }, [appoCtx.timeslotId]);
 
   return (
-    <div>
-      <h1>Appointment Details! </h1>
+    <BackgroundWrapper>
+      <h2>Appointment Details: </h2>
       <AppointmentPreview
         humanTime={humanTime}
         humanDate={humanDate}
       ></AppointmentPreview>
+      <h4>
+        Please Provide your personal information to book the selected
+        appointment:
+      </h4>
+      <AppointmentDetailsEditForm></AppointmentDetailsEditForm>
+
       <ButtonBack onClick={onClickBackHandler} to='/appointments/date'>
         Back
       </ButtonBack>
-    </div>
+    </BackgroundWrapper>
   );
 };
 
