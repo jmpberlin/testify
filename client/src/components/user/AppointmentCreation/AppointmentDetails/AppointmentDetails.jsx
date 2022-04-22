@@ -5,6 +5,7 @@ import AppointmentPreview from '../../../UI/Dates/AppointmentPreview/Appointment
 import AppointmentContext from '../../../stores/appointment-context';
 import BackgroundWrapper from '../../../UI/Wrappers/BackgroundWrapper/BackgroundWrapper';
 import AppointmentDetailsEditForm from '../../../UI/Appointments/AppointmentDetailsEditForm/AppointmentDetailsEditForm';
+import axios from 'axios';
 const AppointmentDetails = () => {
   const appoCtx = useContext(AppointmentContext);
   function onClickBackHandler() {
@@ -20,23 +21,10 @@ const AppointmentDetails = () => {
   }, [appoCtx.timeslotId]);
 
   function editFormChangeHandler(e) {
-    appoCtx.transmitAppointmentDetails(e.target.name, e.target.val);
+    appoCtx.transmitAppointmentDetails(e.target.name, e.target.value);
   }
   function bookAppointmentHandler() {
-    // console.log({
-    //   firstName: appoCtx.firstName,
-    //   lastName: appoCtx.lastName,
-    //   email: appoCtx.email,
-    //   timeslotId: appoCtx.timeslotId,
-    //   addressName: appoCtx.addressName,
-    //   streetName: appoCtx.streetName,
-    //   streetNumber: appoCtx.streetNumber,
-    //   zipCode: appoCtx.zipCode,
-    //   city: appoCtx.city,
-    //   country: appoCtx.country,
-    // });
-
-    appoCtx.getAppointmentDetails();
+    const appointment = appoCtx.getAppointmentDetails();
   }
   return (
     <BackgroundWrapper>

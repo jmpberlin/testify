@@ -10,6 +10,7 @@ const AppointmentContext = React.createContext({
   timeslotId: 0,
   getAppointmentDetails: () => {},
 });
+export default AppointmentContext;
 
 export const AppointmentContextProvider = (props) => {
   const [timeslotId, setTimeslotId] = useState(0);
@@ -28,7 +29,6 @@ export const AppointmentContextProvider = (props) => {
 
   function receiveTimeslotId(id) {
     setTimeslotId(id);
-    console.log(timeslotId);
   }
   function saveTimeslotDateTimeAndService() {
     localStorage.setItem('timeslotId', timeslotId);
@@ -47,61 +47,49 @@ export const AppointmentContextProvider = (props) => {
     switch (name) {
       case 'firstName':
         setFirstName(val);
-        console.log('setFirstName!');
-        console.log(firstName);
         break;
       case 'lastName':
         setLastName(val);
-        console.log('setLasttName!');
         break;
       case 'email':
         setEmail(val);
-        console.log('setEmail!');
         break;
       case 'addressName':
         setAddressName(val);
-        console.log('setAddressName!');
         break;
       case 'streetName':
         setStreetName(val);
-        console.log('setStreetName!');
         break;
       case 'streetNumber':
         setStreetNumber(val);
-        console.log('setStreetNumber!');
         break;
       case 'zipCode':
         setZipCode(val);
-        console.log('setZipcode!');
         break;
       case 'country':
         setCountry(val);
-        console.log('setCountry!');
         break;
       case 'city':
         setCity(val);
-        console.log('setCity!');
         break;
       default:
         break;
     }
   }
   function returnAppointmentDetails() {
-    console.log('first name: ', firstName);
-    console.log('last name: ', lastName);
-    // const appointmentObj = {
-    //   firstName: 'firstName',
-    //   lastName: lastName,
-    //   email: email,
-    //   addressName: addressName,
-    //   streetName: streetName,
-    //   streetNumber: streetNumber,
-    //   zipCode: zipCode,
-    //   city: city,
-    //   country: country,
-    //   timeslotId: timeslotId,
-    // };
-    // return 'appointmentObj;';
+    const appointmentObject = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      addressName: addressName,
+      streetName: streetName,
+      streetNumber: streetNumber,
+      zipCode: zipCode,
+      city: city,
+      country: country,
+      timeslotId: timeslotId,
+    };
+    return appointmentObject;
   }
   useEffect(() => {}, []);
   return (
@@ -130,4 +118,3 @@ export const AppointmentContextProvider = (props) => {
     </AppointmentContext.Provider>
   );
 };
-export default AppointmentContext;
