@@ -19,6 +19,25 @@ const AppointmentDetails = () => {
     setHumanTime(localStorage.getItem('humanTime'));
   }, [appoCtx.timeslotId]);
 
+  function editFormChangeHandler(e) {
+    appoCtx.transmitAppointmentDetails(e.target.name, e.target.val);
+  }
+  function bookAppointmentHandler() {
+    // console.log({
+    //   firstName: appoCtx.firstName,
+    //   lastName: appoCtx.lastName,
+    //   email: appoCtx.email,
+    //   timeslotId: appoCtx.timeslotId,
+    //   addressName: appoCtx.addressName,
+    //   streetName: appoCtx.streetName,
+    //   streetNumber: appoCtx.streetNumber,
+    //   zipCode: appoCtx.zipCode,
+    //   city: appoCtx.city,
+    //   country: appoCtx.country,
+    // });
+
+    appoCtx.getAppointmentDetails();
+  }
   return (
     <BackgroundWrapper>
       <h2>Appointment Details: </h2>
@@ -30,8 +49,10 @@ const AppointmentDetails = () => {
         Please Provide your personal information to book the selected
         appointment:
       </h4>
-      <AppointmentDetailsEditForm></AppointmentDetailsEditForm>
-
+      <AppointmentDetailsEditForm
+        onChange={editFormChangeHandler}
+      ></AppointmentDetailsEditForm>
+      <button onClick={bookAppointmentHandler}>Book the appointment</button>
       <ButtonBack onClick={onClickBackHandler} to='/appointments/date'>
         Back
       </ButtonBack>

@@ -1,0 +1,4 @@
+.appointment_details_edit_form_wrapper {
+  display: flex;
+  flex-direction: column;
+}

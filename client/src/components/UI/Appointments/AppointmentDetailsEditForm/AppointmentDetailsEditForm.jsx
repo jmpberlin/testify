@@ -1,39 +1,76 @@
 import React from 'react';
+import styles from './AppointmentDetailsEditForm.module.css';
 
 const AppointmentDetailsEditForm = (props) => {
   return (
-    <div>
+    <div className={styles.appointment_details_edit_form_wrapper}>
       <label className='' htmlFor='firstName'>
         First Name:
       </label>
-      <input type='text' name='firstName' id='firstName' />
+      <input
+        onChange={props.onChange}
+        type='text'
+        name='firstName'
+        id='firstName'
+      />
 
       <label htmlFor='lastName'>Last Name: </label>
-      <input type='text' name='lastName' id='lastName' />
+      <input
+        onChange={props.onChange}
+        type='text'
+        name='lastName'
+        id='lastName'
+      />
+      <label htmlFor='email'>Email: </label>
+      <input onChange={props.onChange} type='email' name='email' id='email' />
 
       <label htmlFor='addressName'>Address name:</label>
-      <input type='text' name='addressName' id='addressName' />
+      <input
+        onChange={props.onChange}
+        type='text'
+        name='addressName'
+        id='addressName'
+      />
 
       <label htmlFor='streetName'>Street name:</label>
 
-      <input type='text' name='streetName' id='streetName' />
+      <input
+        onChange={props.onChange}
+        type='text'
+        name='streetName'
+        id='streetName'
+      />
 
       <label htmlFor='streetNumber'>Street number:</label>
 
-      <input type='number' name='streetNumber' id='streetNumber' />
+      <input
+        onChange={props.onChange}
+        type='text'
+        name='streetNumber'
+        id='streetNumber'
+      />
 
-      <label htmlFor='postalCode'>Postal code:</label>
-      <input type='text' name='postalCode' id='postalCode' />
+      <label htmlFor='zipCode'>Zip Code:</label>
+      <input
+        onChange={props.onChange}
+        type='text'
+        name='zipCode'
+        id='zipCode'
+      />
 
       <label htmlFor='city'>City:</label>
 
-      <input type='text' name='city' id='city' />
+      <input onChange={props.onChange} type='text' name='city' id='city' />
 
       <label htmlFor='country'>Country:</label>
 
-      <input type='text' name='country' id='country' />
+      <input
+        onChange={props.onChange}
+        type='text'
+        name='country'
+        id='country'
+      />
 
-      <button type='submit'>Save Changes</button>
     </div>
   );
 };
