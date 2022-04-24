@@ -16,6 +16,10 @@ const AppointmentDate = (props) => {
   const onSubmitHandler = (e) => {
     appoCtx.saveTimeslot();
   };
+  const selectServiceHandler = (e) => {
+    console.log(e.target.value);
+    appoCtx.transmitService(e.target.value);
+  };
   const onSelectDateHandler = (e) => {
     if (e.target.value && e.target.value !== selectedDate) {
       setSelectedDate(e.target.value);
@@ -41,6 +45,13 @@ const AppointmentDate = (props) => {
       setTimeslotIsSelected(true);
     }
   }, [appoCtx.timeslotId]);
+  useEffect(() => {
+    selectServiceHandler({
+      target: {
+        value: 'kostenloser Bürgertest',
+      },
+    });
+  }, []);
 
   return (
     <BackgroundWrapper>
@@ -49,8 +60,8 @@ const AppointmentDate = (props) => {
           <TitleBox>
             <label htmlFor='service'>Service:</label>
           </TitleBox>
-          <select name='service' id='service'>
-            <option value='konstenloser Bürgertest'>
+          <select onChange={selectServiceHandler} name='service' id='service'>
+            <option select='selected' value='konstenloser Bürgertest'>
               kostenloser Bürgertest
             </option>
             <option value='PCR-Test'>PCR-Test</option>

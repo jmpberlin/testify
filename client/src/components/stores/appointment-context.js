@@ -19,7 +19,7 @@ export const AppointmentContextProvider = (props) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [service, setService] = useState('kostenloser Bürgertest');
+  const [service, setService] = useState();
   const [duration, setDuration] = useState(5);
   const [addressName, setAddressName] = useState('');
   const [streetName, setStreetName] = useState('');
@@ -78,6 +78,9 @@ export const AppointmentContextProvider = (props) => {
         break;
     }
   }
+  const receiveService = (serviceString) => {
+    setService(serviceString);
+  };
   function returnAppointmentDetails() {
     return {
       first_name: firstName,
@@ -102,6 +105,7 @@ export const AppointmentContextProvider = (props) => {
         transmitTimeslotId: receiveTimeslotId,
         transmitHumanDate: receiveHumanDate,
         transmitHumanTime: receiveHumanTime,
+        transmitService: receiveService,
         saveTimeslot: saveTimeslotDateTimeAndService,
         transmitAppointmentDetails: receiveAppointmentDetails,
         firstName: firstName,
