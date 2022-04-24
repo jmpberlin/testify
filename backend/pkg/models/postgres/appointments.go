@@ -27,7 +27,7 @@ func ValidateAppointment(v *validation.Validator, appointment *models.Appointmen
 	v.Check(utf8.RuneCountInString(appointment.AddressName) < 35, "address name", "can't have more than 35 characters")
 	v.Check(appointment.StreetName != "", "street name ", "must be provided")
 	v.Check(utf8.RuneCountInString(appointment.StreetName) < 35, "street name", "can't have more than 35 characters")
-	v.Check(appointment.StreetNumber > 0 && appointment.StreetNumber < 1000, "street number", "can't be bigger than 99999 or smaller than 10000")
+	v.Check(appointment.StreetNumber != "", "street number", "must be provided")
 	v.Check(appointment.ZipCode != "", "zipcode", "must be provided")
 	v.Check(appointment.City != "", "city name", "must be provided")
 	v.Check(utf8.RuneCountInString(appointment.City) < 35, "city name", "can't have more than 35 characters")

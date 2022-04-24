@@ -29,7 +29,7 @@ type Appointment struct {
 	Result       bool      `json:"result"`
 	AddressName  string    `json:"address_name"`
 	StreetName   string    `json:"street_name"`
-	StreetNumber int       `json:"street_number"`
+	StreetNumber string    `json:"street_number"`
 	ZipCode      string    `json:"zip_code"`
 	City         string    `json:"city"`
 	Country      string    `json:"country"`

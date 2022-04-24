@@ -1,5 +1,6 @@
 import React from 'react';
 import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ButtonBack from '../../../UI/Buttons/ButtonBack/ButtonBack';
 import AppointmentPreview from '../../../UI/Dates/AppointmentPreview/AppointmentPreview';
 import AppointmentContext from '../../../stores/appointment-context';
@@ -8,8 +9,8 @@ import AppointmentDetailsEditForm from '../../../UI/Appointments/AppointmentDeta
 import axios from 'axios';
 const AppointmentDetails = () => {
   const appoCtx = useContext(AppointmentContext);
+  const navigator = useNavigate();
   function onClickBackHandler() {
-    console.log('you still have to delete the localStorage items!');
     appoCtx.transmitTimeslotId(0);
   }
   const [humanDate, setHumanDate] = useState(null);
@@ -25,6 +26,16 @@ const AppointmentDetails = () => {
   }
   function bookAppointmentHandler() {
     const appointment = appoCtx.getAppointmentDetails();
+    console.log(appointment);
+    axios
+      .post('/api/v1/Appointment/Create', appointment)
+      .then((resFromApi) => {
+        
+        navigator('/appointments/confirmation');
+      })
+      .catch((error) => {
+        console.log('=======>> There was an error \n', error.response);
+      });
   }
   return (
     <BackgroundWrapper>

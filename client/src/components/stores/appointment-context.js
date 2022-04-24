@@ -19,7 +19,8 @@ export const AppointmentContextProvider = (props) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [service, setService] = useState('');
+  const [service, setService] = useState('kostenloser Bürgertest');
+  const [duration, setDuration] = useState(5);
   const [addressName, setAddressName] = useState('');
   const [streetName, setStreetName] = useState('');
   const [streetNumber, setStreetNumber] = useState('');
@@ -62,6 +63,7 @@ export const AppointmentContextProvider = (props) => {
         break;
       case 'streetNumber':
         setStreetNumber(val);
+        console.log('streetNumber is set!');
         break;
       case 'zipCode':
         setZipCode(val);
@@ -77,19 +79,20 @@ export const AppointmentContextProvider = (props) => {
     }
   }
   function returnAppointmentDetails() {
-    const appointmentObject = {
-      firstName: firstName,
-      lastName: lastName,
+    return {
+      first_name: firstName,
+      last_name: lastName,
       email: email,
-      addressName: addressName,
-      streetName: streetName,
-      streetNumber: streetNumber,
-      zipCode: zipCode,
+      address_name: addressName,
+      street_name: streetName,
+      street_number: streetNumber,
+      zip_code: zipCode,
       city: city,
       country: country,
-      timeslotId: timeslotId,
+      time_slot: timeslotId,
+      duration: duration,
+      service: service,
     };
-    return appointmentObject;
   }
   useEffect(() => {}, []);
   return (
