@@ -6,6 +6,7 @@ import AppointmentDetails from './components/user/AppointmentCreation/Appointmen
 import AppointmentConfirmation from './components/user/AppointmentCreation/AppointmentConfirmation/AppointmentConfirmation';
 import HeaderMenu from './components/UI/Menus/HeaderMenu/HeaderMenu';
 import LoginBox from './components/user/Authentification/LoginBox/LoginBox';
+import SignupBox from './components/user/Authentification/SignupBox/SignupBox';
 function App() {
   return (
     <div>
@@ -30,6 +31,7 @@ function App() {
             element={<AppointmentConfirmation />}
           ></Route>
           <Route exact path='/login' element={<LoginBox />}></Route>
+          <Route exact path='/signup' element={<SignupBox />}></Route>
         </Routes>
       </BrowserRouter>
     </div>

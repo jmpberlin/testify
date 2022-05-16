@@ -7,7 +7,6 @@ import (
 
 var ErrNoSearchQuery = errors.New("the url must provide either a last name, email or ID")
 
-
 func (app *application) logError(r *http.Request, err error) {
 	app.errorLog.Println(err)
 }
@@ -18,7 +17,7 @@ func (app *application) errorResponse(w http.ResponseWriter, r *http.Request, st
 	err := app.writeJSON(w, status, env, nil)
 	if err != nil {
 		app.logError(r, err)
-		w.WriteHeader(500)
+		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
 func (app *application) serverErrorResponse(w http.ResponseWriter, r *http.Request, err error) {

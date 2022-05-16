@@ -65,7 +65,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 	// fmt.Println(app.session.Exists(r, "authenticatedUserID"))
 	// fmt.Println(app.session.GetString(r, "authenticatedUserID"))
-	// app.session.Put(r, "hallo", "1")
+	// app.session.Put(r.Context(), "hallo", "1")
 
 	var input struct {
 		Email string `json:"email"`
@@ -76,12 +76,13 @@ func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
 		app.badRequestResponse(w, r, err)
 		return
 	}
+
 	id, err := app.users.Authenticate(input.Email, input.PW)
 	if err != nil {
 		app.badRequestResponse(w, r, err)
 		return
 	}
-	// app.session.Put(r, "authenticatedUserID", id)
+	app.session.Put(r.Context(), "authenticatedUserID", id)
 	headers := make(http.Header)
 	headers.Set("Location", fmt.Sprintf("/api/v1/users/%d", id))
 	err = app.writeJSON(w, http.StatusOK, envelope{"success": "you logged in successfully!"}, headers)
@@ -331,18 +332,18 @@ func (app *application) getTimeslotsByDate(w http.ResponseWriter, r *http.Reques
 /// DELETE -- SESSION TRYOUT
 
 func (app *application) putSessionSnippet(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("%+v\n", app.session.Cookie)
+	// fmt.Printf("%+v\n", app.session.Cookie)
 
 	sessionManager.Put(r.Context(), "message", "Hello from a session!")
 
-	fmt.Println(w.Header())
+	// fmt.Println(w.Header())
 	w.WriteHeader(200)
 
 }
 
 func (app *application) getSessionSnippet(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Printf("%+v\n", app.session.Cookie)
+	// fmt.Printf("%+v\n", app.session.Cookie)
 	fmt.Println(sessionManager.GetString(r.Context(), "message"))
 	io.WriteString(w, sessionManager.GetString(r.Context(), "message"))
 }

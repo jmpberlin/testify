@@ -12,13 +12,13 @@ var (
 	ErrTimeslotUnavailable = errors.New("timeslot is already taken")
 )
 
-type Snippet struct {
-	ID      int
-	Title   string
-	Content string
-	Created time.Time
-	Expires time.Time
-}
+// type Snippet struct {
+// 	ID      int
+// 	Title   string
+// 	Content string
+// 	Created time.Time
+// 	Expires time.Time
+// }
 type Appointment struct {
 	ID           int       `json:"id"`
 	FirstName    string    `json:"first_name"`

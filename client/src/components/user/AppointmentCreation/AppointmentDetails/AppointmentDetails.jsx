@@ -38,10 +38,6 @@ const AppointmentDetails = () => {
       .catch((error) => {
         setBookingError(true);
         setBookingErrorMessage(error.response.data.error);
-        console.log(
-          '=======>> There was an error \n',
-          error.response.data.error
-        );
       });
   }
   return (
@@ -58,7 +54,9 @@ const AppointmentDetails = () => {
       <AppointmentDetailsEditForm
         onChange={editFormChangeHandler}
       ></AppointmentDetailsEditForm>
-      {bookingError && <InputError message="an error ocurred while booking your appointment. Please fill out all fields."></InputError>}
+      {bookingError && (
+        <InputError message='an error ocurred while booking your appointment. Please fill out all fields.'></InputError>
+      )}
       <button onClick={bookAppointmentHandler}>Book the appointment</button>
       <ButtonBack onClick={onClickBackHandler} to='/appointments/date'>
         Back

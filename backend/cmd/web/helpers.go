@@ -23,7 +23,6 @@ func (mr *MalformedRequest) Error() string {
 }
 
 type envelope map[string]interface{}
-
 func DecodeJSONBody(w http.ResponseWriter, r *http.Request, dst interface{}) error {
 	if r.Header.Get("Content-Type") != "" {
 		value, _ := header.ParseValueAndParams(r.Header, "Content-Type")
