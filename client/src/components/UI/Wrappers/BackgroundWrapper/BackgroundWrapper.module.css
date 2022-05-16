@@ -1,0 +1,7 @@
+.outerWrapper {
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: rgb(251, 175, 33, 0.6);
+}

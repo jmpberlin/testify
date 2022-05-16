@@ -7,6 +7,7 @@ import AppointmentContext from '../../../stores/appointment-context';
 import BackgroundWrapper from '../../../UI/Wrappers/BackgroundWrapper/BackgroundWrapper';
 import AppointmentDetailsEditForm from '../../../UI/Appointments/AppointmentDetailsEditForm/AppointmentDetailsEditForm';
 import axios from 'axios';
+import InputError from '../../../UI/Errors/InputError/InputError';
 const AppointmentDetails = () => {
   const appoCtx = useContext(AppointmentContext);
   const navigator = useNavigate();
@@ -15,6 +16,8 @@ const AppointmentDetails = () => {
   }
   const [humanDate, setHumanDate] = useState(null);
   const [humanTime, setHumanTime] = useState(null);
+  const [bookingError, setBookingError] = useState(false);
+  const [bookingErrorMessage, setBookingErrorMessage] = useState('');
 
   useEffect(() => {
     setHumanDate(localStorage.getItem('humanDate'));
@@ -30,11 +33,15 @@ const AppointmentDetails = () => {
     axios
       .post('/api/v1/Appointment/Create', appointment)
       .then((resFromApi) => {
-        
         navigator('/appointments/confirmation');
       })
       .catch((error) => {
-        console.log('=======>> There was an error \n', error.response);
+        setBookingError(true);
+        setBookingErrorMessage(error.response.data.error);
+        console.log(
+          '=======>> There was an error \n',
+          error.response.data.error
+        );
       });
   }
   return (
@@ -51,6 +58,7 @@ const AppointmentDetails = () => {
       <AppointmentDetailsEditForm
         onChange={editFormChangeHandler}
       ></AppointmentDetailsEditForm>
+      {bookingError && <InputError message="an error ocurred while booking your appointment. Please fill out all fields."></InputError>}
       <button onClick={bookAppointmentHandler}>Book the appointment</button>
       <ButtonBack onClick={onClickBackHandler} to='/appointments/date'>
         Back

@@ -1,0 +1,14 @@
+button {
+  background-color: white;
+  border: 0px solid black;
+  border-radius: 5px;
+}
+.menuItem {
+  border: 1px solid black;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.menuItem :hover {
+  background-color: rgb(251, 175, 33, 0.6);
+}

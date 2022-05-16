@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState, useContext, useEffect } from 'react';
+import styles from './AppointmentDate.module.css';
 import ButtonNext from '../../../UI/Buttons/ButtonNext/ButtonNext';
 import BackgroundWrapper from '../../../UI/Wrappers/BackgroundWrapper/BackgroundWrapper';
-import TitleBox from '../../../UI/Boxes/TitleBox/TitleBox';
 import axios from 'axios';
 import TimeSlotWrapper from './TimeSlotWrapper/TimeSlotWrapper';
 import AppointmentContext from '../../../stores/appointment-context';
@@ -55,11 +55,9 @@ const AppointmentDate = (props) => {
 
   return (
     <BackgroundWrapper>
-      <div className='borderbox flexwrapper'>
+      <div className={styles.outerWrapper}>
         <form>
-          <TitleBox>
-            <label htmlFor='service'>Service:</label>
-          </TitleBox>
+          <label htmlFor='service'>Service:</label>
           <select onChange={selectServiceHandler} name='service' id='service'>
             <option select='selected' value='konstenloser Bürgertest'>
               kostenloser Bürgertest
@@ -68,7 +66,7 @@ const AppointmentDate = (props) => {
             <option value='Antigen-Test'>Antigen-Test</option>
           </select>
           <br />
-          <label htmlFor='appointmentDate'>Datum</label>
+          <label htmlFor='appointmentDate'>Datum:</label>
           <input
             onSelect={onSelectDateHandler}
             type='date'
