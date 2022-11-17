@@ -1,5 +1,6 @@
 .time_slot_wrapper {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   border: 1px solid black;
 }

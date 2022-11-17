@@ -6,6 +6,7 @@ import BackgroundWrapper from '../../../UI/Wrappers/BackgroundWrapper/Background
 import axios from 'axios';
 import TimeSlotWrapper from './TimeSlotWrapper/TimeSlotWrapper';
 import AppointmentContext from '../../../stores/appointment-context';
+import { createTimeslotArrayForDate } from '../../../../helpers/timeslot-creator';
 const AppointmentDate = (props) => {
   const appoCtx = useContext(AppointmentContext);
 
@@ -27,16 +28,23 @@ const AppointmentDate = (props) => {
       axios
         .get(`/api/v1/Timeslots/show/getByDate/${dateObj.toISOString()}`)
         .then((resFromDb) => {
-          setTimeSlotArray(resFromDb.data.appointments);
+          console.log(resFromDb);
+          console.log(typeof resFromDb);
+          let timeslotArray = createTimeslotArrayForDate(
+            resFromDb.data.appointments
+          );
+          console.log('this is the timeslotArray', timeslotArray);
+          // setTimeSlotArray(resFromDb.data.appointments);
+          setTimeSlotArray(timeslotArray);
           setErrorMessage(null);
         })
         .catch((error) => {
+          console.log(error.response);
           if (error.response.status === 404) {
             setErrorMessage(
               'There are no appointments available for the selected date!'
             );
             setTimeSlotArray([]);
-            // run!
           }
         });
     }
