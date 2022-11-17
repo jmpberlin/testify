@@ -36,6 +36,7 @@ const AppointmentDate = (props) => {
               'There are no appointments available for the selected date!'
             );
             setTimeSlotArray([]);
+            // run!
           }
         });
     }
