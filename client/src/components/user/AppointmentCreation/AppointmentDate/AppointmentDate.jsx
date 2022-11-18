@@ -31,7 +31,8 @@ const AppointmentDate = (props) => {
           console.log(resFromDb);
           console.log(typeof resFromDb);
           let timeslotArray = createTimeslotArrayForDate(
-            resFromDb.data.appointments
+            resFromDb.data.appointments,
+            dateObj
           );
           console.log('this is the timeslotArray', timeslotArray);
           // setTimeSlotArray(resFromDb.data.appointments);
@@ -39,13 +40,18 @@ const AppointmentDate = (props) => {
           setErrorMessage(null);
         })
         .catch((error) => {
-          console.log(error.response);
-          if (error.response.status === 404) {
-            setErrorMessage(
-              'There are no appointments available for the selected date!'
-            );
-            setTimeSlotArray([]);
-          }
+          console.log('running! ');
+          let timeslotArray = createTimeslotArrayForDate([], dateObj);
+          setErrorMessage(null);
+          console.log('this is the timeslotarray:', timeslotArray);
+          setTimeSlotArray(timeslotArray);
+          // console.log(error.response);
+          // if (error.response.status === 404) {
+          //   setErrorMessage(
+          //     'There are no appointments available for the selected date!'
+          //   );
+          //   setTimeSlotArray([]);
+          // }
         });
     }
   };
