@@ -150,7 +150,6 @@ func (app *application) createAppointment(w http.ResponseWriter, r *http.Request
 		app.serverErrorResponse(w, r, err)
 		return
 	}
-
 	v := validation.New()
 	if postgres.ValidateAppointment(v, appointment); !v.Valid() {
 		app.failedValidationResponse(w, r, v.Errors)

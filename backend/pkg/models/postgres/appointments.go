@@ -47,21 +47,19 @@ func (m *AppointmentModel) Insert(appointment *models.Appointment) error {
 }
 
 func (m *AppointmentModel) IsAvailable(inputTime time.Time) error {
-	fmt.Println(inputTime)
 	inputTimePlusFive := inputTime.Local().Add((time.Minute * time.Duration(4)) + (time.Second * time.Duration(59)))
-	stmt := `SELECT * FROM timeslots WHERE start_time between $1 and $2`
-	date := fmt.Sprintf("%d-%d-%d", inputTime.Year(), inputTime.Month(), inputTime.Day(), inputTime.Hour(), inputTime.Minute())
-	datePlusFive := fmt.Sprintf("%d-%d-%d", inputTimePlusFive.Year(), inputTimePlusFive.Month(), inputTimePlusFive.Day(), inputTimePlusFive.Hour(), inputTimePlusFive.Minute())
+	stmt := `SELECT * FROM appointments WHERE start_time between $1 and $2`
+	date := fmt.Sprintf("%d-%d-%d %d:%d", inputTime.Year(), inputTime.Month(), inputTime.Day(), inputTime.Hour(), inputTime.Minute())
+	datePlusFive := fmt.Sprintf("%d-%d-%d %d:%d", inputTimePlusFive.Year(), inputTimePlusFive.Month(), inputTimePlusFive.Day(), inputTimePlusFive.Hour(), inputTimePlusFive.Minute())
 	a := &models.Appointment{}
-
 	err := m.DB.QueryRow(stmt, date, datePlusFive).Scan(&a.ID, &a.StartTime, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt)
+	fmt.Println(a)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return models.ErrNoRecord
+			return nil
 		}
 	}
-	fmt.Println("scrab! ")
-	return nil
+	return models.ErrTimeslotUnavailable
 }
 
 func (m *AppointmentModel) GetByLastName(lastName string) (appointments []*models.Appointment, err error) {

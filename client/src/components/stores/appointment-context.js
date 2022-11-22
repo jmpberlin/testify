@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
+// TO-DO: Save the timeslot in context
+// figure out wich timeforat Golang wants the time/date to be in
+// transfer the date when booking an appointment
+
 const AppointmentContext = React.createContext({
   transmitTimeslotId: () => {},
   transmitService: () => {},
   saveTimeslot: () => {},
+  transmitTimeslot: () => {},
   transmitHumanDate: () => {},
   transmitHumanTime: () => {},
   transmitAppointmentDetails: () => {},
@@ -13,6 +18,7 @@ const AppointmentContext = React.createContext({
 export default AppointmentContext;
 
 export const AppointmentContextProvider = (props) => {
+  const [timeslot, setTimeslot] = useState(null);
   const [timeslotId, setTimeslotId] = useState(0);
   const [humanDate, setHumanDate] = useState(null);
   const [humanTime, setHumanTIme] = useState(null);
@@ -31,11 +37,15 @@ export const AppointmentContextProvider = (props) => {
   function receiveTimeslotId(id) {
     setTimeslotId(id);
   }
+  function receiveTimeslot(isoString) {
+    setTimeslot(isoString);
+  }
   function saveTimeslotDateTimeAndService() {
     localStorage.setItem('timeslotId', timeslotId);
     localStorage.setItem('humanDate', humanDate);
     localStorage.setItem('humanTime', humanTime);
     localStorage.setItem('service', service);
+    localStorage.setItem('timeslot', timeslot);
     console.log('Time, Date & TimeslotId is set on localStorage');
   }
   function receiveHumanDate(humanDate) {
@@ -82,6 +92,7 @@ export const AppointmentContextProvider = (props) => {
   };
   function returnAppointmentDetails() {
     return {
+      start_time: timeslot,
       first_name: firstName,
       last_name: lastName,
       email: email,
@@ -101,6 +112,7 @@ export const AppointmentContextProvider = (props) => {
     <AppointmentContext.Provider
       value={{
         timeslotId: timeslotId,
+        transmitTimeslot: receiveTimeslot,
         transmitTimeslotId: receiveTimeslotId,
         transmitHumanDate: receiveHumanDate,
         transmitHumanTime: receiveHumanTime,

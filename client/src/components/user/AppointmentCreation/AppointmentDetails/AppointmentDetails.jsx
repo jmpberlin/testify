@@ -9,8 +9,7 @@ import AppointmentDetailsEditForm from '../../../UI/Appointments/AppointmentDeta
 import axios from 'axios';
 import InputError from '../../../UI/Errors/InputError/InputError';
 const AppointmentDetails = () => {
-
-  // run! 
+  // run!
   const appoCtx = useContext(AppointmentContext);
   const navigator = useNavigate();
   function onClickBackHandler() {
@@ -24,6 +23,8 @@ const AppointmentDetails = () => {
   useEffect(() => {
     setHumanDate(localStorage.getItem('humanDate'));
     setHumanTime(localStorage.getItem('humanTime'));
+    appoCtx.transmitTimeslot(localStorage.getItem('timeslot'));
+    appoCtx.transmitService(localStorage.getItem('service'));
   }, [appoCtx.timeslotId]);
 
   function editFormChangeHandler(e) {
@@ -31,13 +32,15 @@ const AppointmentDetails = () => {
   }
   function bookAppointmentHandler() {
     const appointment = appoCtx.getAppointmentDetails();
-    console.log(appointment);
+
+    console.log(appointment.start_time);
     axios
       .post('/api/v1/Appointment/Create', appointment)
       .then((resFromApi) => {
         navigator('/appointments/confirmation');
       })
       .catch((error) => {
+        console.log(error.response.data);
         setBookingError(true);
         setBookingErrorMessage(error.response.data.error);
       });
