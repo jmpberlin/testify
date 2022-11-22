@@ -1,16 +1,3 @@
-export const createTimeslotArrayForDateSecond = (taken) => {
-  return 'scrab';
-};
-
-/// TO-DO: Warum werden immer Termine übersprungen
-// IDs checken
-
-// let timeslotArray = [
-//   { id: 1, start_time: '2022-11-17T08:05:00+01:00', taken: true },
-//   { id: 2, start_time: '2022-11-17T08:30:00+01:00', taken: true },
-//   { id: 3, start_time: '2022-11-17T08:50:00+01:00', taken: true },
-// ];
-
 export const createTimeslotArrayForDate = (taken, date) => {
   let resultArr = [];
   let oldDateObj = date;
@@ -26,13 +13,9 @@ export const createTimeslotArrayForDate = (taken, date) => {
       let newDateObjMinutes = newDateObj.getMinutes();
       let dbHours = new Date(taken[0].start_time).getHours();
       let dbMinutes = new Date(taken[0].start_time).getMinutes();
-      console.log('this is newDateObjHours', newDateObjHours);
-      console.log('this is newDateObjMinutes', newDateObjMinutes);
-      console.log('this is dbHoures', dbHours);
-      console.log('this is dbHoures', dbMinutes);
+
       if (newDateObjHours === dbHours && newDateObjMinutes === dbMinutes) {
         taken.shift();
-        console.log('SCRAB!');
         continue;
       } else {
         resultObj.start_time = newDateObj.toISOString();
