@@ -58,8 +58,8 @@ func (m *TimeslotModel) SetToTaken(id int) error {
 
 func (m *TimeslotModel) GetAllByDate(dateTime time.Time) (timeslots []*models.TimeSlot, err error) {
 	stmt := `
-	SELECT * FROM timeslots WHERE start_time::date = $1 AND taken = false ORDER BY start_time ASC;
-	`
+	SELECT * FROM timeslots WHERE start_time::date = $1 ORDER BY start_time ASC; 
+	` // AND taken = false (removed from SQL statement)
 	date := fmt.Sprintf("%d-%d-%d", dateTime.Year(), dateTime.Month(), dateTime.Day())
 	rows, err := m.DB.Query(stmt, date)
 	if err != nil {

@@ -19,7 +19,9 @@ const TimeSlot = (props) => {
   let dateObj = new Date(props.start_time);
 
   const hours = dateObj.getHours();
-  const minutes = dateObj.getMinutes();
+  let minutes = dateObj.getMinutes();
+  minutes = ('0' + minutes).slice(-2);
+
   return (
     <div onClick={selectAppointmentHandler} className={styles.time_slot}>
       <p>

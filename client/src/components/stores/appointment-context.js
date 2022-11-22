@@ -63,7 +63,6 @@ export const AppointmentContextProvider = (props) => {
         break;
       case 'streetNumber':
         setStreetNumber(val);
-        console.log('streetNumber is set!');
         break;
       case 'zipCode':
         setZipCode(val);
