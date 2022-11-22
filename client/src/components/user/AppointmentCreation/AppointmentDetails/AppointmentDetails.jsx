@@ -9,6 +9,8 @@ import AppointmentDetailsEditForm from '../../../UI/Appointments/AppointmentDeta
 import axios from 'axios';
 import InputError from '../../../UI/Errors/InputError/InputError';
 const AppointmentDetails = () => {
+
+  // run! 
   const appoCtx = useContext(AppointmentContext);
   const navigator = useNavigate();
   function onClickBackHandler() {
