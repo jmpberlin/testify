@@ -21,6 +21,7 @@ var (
 // }
 type Appointment struct {
 	ID           int       `json:"id"`
+	StartTime    time.Time `json:"start_time"`
 	FirstName    string    `json:"first_name"`
 	LastName     string    `json:"last_name"`
 	Email        string    `json:"email"`
@@ -35,7 +36,7 @@ type Appointment struct {
 	Country      string    `json:"country"`
 	CreatedAt    time.Time `json:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at"`
-	TimeSlot     int       `json:"time_slot"`
+	// TimeSlot     int       `json:"time_slot"`
 }
 type ResultInput struct {
 	ID        int    `json:"id"`
@@ -56,10 +57,10 @@ type User struct {
 	Role           string    `json:"-"`
 }
 
-type TimeSlot struct {
-	ID        int       `json:"id"`
-	Taken     bool      `json:"taken"`
-	StartTime time.Time `json:"start_time"`
-}
+// type TimeSlot struct {
+// 	ID        int       `json:"id"`
+// 	Taken     bool      `json:"taken"`
+// 	StartTime time.Time `json:"start_time"`
+// }
 
 // possibilities: employee, admin, user

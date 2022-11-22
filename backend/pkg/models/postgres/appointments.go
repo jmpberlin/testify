@@ -3,6 +3,8 @@ package postgres
 import (
 	"database/sql"
 	"errors"
+	"fmt"
+	"time"
 	"unicode/utf8"
 
 	"johannespolte.de/testify/pkg/models"
@@ -37,11 +39,29 @@ func ValidateAppointment(v *validation.Validator, appointment *models.Appointmen
 }
 func (m *AppointmentModel) Insert(appointment *models.Appointment) error {
 	query := `
-	INSERT INTO appointments (first_name, last_name,email, duration,service,address_name,street_name,street_number,zip_code,city,country,time_slot) 
+	INSERT INTO appointments (start_time, first_name, last_name,email, duration,service,address_name,street_name,street_number,zip_code,city,country) 
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,$12)
 	RETURNING id, created_at`
-	args := []interface{}{appointment.FirstName, appointment.LastName, appointment.Email, appointment.Duration, appointment.Service, appointment.AddressName, appointment.StreetName, appointment.StreetNumber, appointment.ZipCode, appointment.City, appointment.Country, appointment.TimeSlot}
+	args := []interface{}{appointment.StartTime, appointment.FirstName, appointment.LastName, appointment.Email, appointment.Duration, appointment.Service, appointment.AddressName, appointment.StreetName, appointment.StreetNumber, appointment.ZipCode, appointment.City, appointment.Country} // , appointment.TimeSlot
 	return m.DB.QueryRow(query, args...).Scan(&appointment.ID, &appointment.CreatedAt)
+}
+
+func (m *AppointmentModel) IsAvailable(inputTime time.Time) error {
+	fmt.Println(inputTime)
+	inputTimePlusFive := inputTime.Local().Add((time.Minute * time.Duration(4)) + (time.Second * time.Duration(59)))
+	stmt := `SELECT * FROM timeslots WHERE start_time between $1 and $2`
+	date := fmt.Sprintf("%d-%d-%d", inputTime.Year(), inputTime.Month(), inputTime.Day(), inputTime.Hour(), inputTime.Minute())
+	datePlusFive := fmt.Sprintf("%d-%d-%d", inputTimePlusFive.Year(), inputTimePlusFive.Month(), inputTimePlusFive.Day(), inputTimePlusFive.Hour(), inputTimePlusFive.Minute())
+	a := &models.Appointment{}
+
+	err := m.DB.QueryRow(stmt, date, datePlusFive).Scan(&a.ID, &a.StartTime, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return models.ErrNoRecord
+		}
+	}
+	fmt.Println("scrab! ")
+	return nil
 }
 
 func (m *AppointmentModel) GetByLastName(lastName string) (appointments []*models.Appointment, err error) {
@@ -54,7 +74,7 @@ func (m *AppointmentModel) GetByLastName(lastName string) (appointments []*model
 	appointmentSlice := []*models.Appointment{}
 	for rows.Next() {
 		a := &models.Appointment{}
-		err = rows.Scan(&a.ID, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt, &a.TimeSlot)
+		err = rows.Scan(&a.ID, &a.StartTime, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt) //, &a.TimeSlot
 		if err != nil {
 			return nil, err
 		}
@@ -71,7 +91,7 @@ func (m *AppointmentModel) GetByID(id int) (appointment *models.Appointment, err
     WHERE id=$1 `
 	row := m.DB.QueryRow(stmt, id)
 	a := &models.Appointment{}
-	err = row.Scan(&a.ID, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt, &a.TimeSlot)
+	err = row.Scan(&a.ID, &a.StartTime, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt) // , &a.TimeSlot
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, models.ErrNoRecord
@@ -91,7 +111,7 @@ func (m *AppointmentModel) GetByEmail(email string) (appointment []*models.Appoi
 	appointmentSlice := []*models.Appointment{}
 	for rows.Next() {
 		a := &models.Appointment{}
-		err = rows.Scan(&a.ID, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt, &a.TimeSlot)
+		err = rows.Scan(&a.ID, &a.StartTime, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt) // , &a.TimeSlot
 		if err != nil {
 			return nil, err
 		}
@@ -116,5 +136,5 @@ func (m *AppointmentModel) UpdateResult(a *models.Appointment) error {
 		a.UpdatedAt,
 		a.ID,
 	}
-	return m.DB.QueryRow(query, args...).Scan(&a.ID, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt, &a.TimeSlot)
+	return m.DB.QueryRow(query, args...).Scan(&a.ID, &a.StartTime, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt) // , &a.TimeSlot
 }

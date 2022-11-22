@@ -101,6 +101,7 @@ func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) createAppointment(w http.ResponseWriter, r *http.Request) {
 	var input struct {
+		StartTime    time.Time `json:"start_time"`
 		FirstName    string    `json:"first_name"`
 		LastName     string    `json:"last_name"`
 		Email        string    `json:"email"`
@@ -118,11 +119,14 @@ func (app *application) createAppointment(w http.ResponseWriter, r *http.Request
 
 	err := DecodeJSONBody(w, r, &input)
 	if err != nil {
+		// print potential error
+		fmt.Println(err)
 		app.badRequestResponse(w, r, err)
 		return
 	}
 
 	appointment := &models.Appointment{
+		StartTime:    input.StartTime,
 		FirstName:    input.FirstName,
 		LastName:     input.LastName,
 		Email:        input.Email,
@@ -135,12 +139,12 @@ func (app *application) createAppointment(w http.ResponseWriter, r *http.Request
 		City:         input.City,
 		Country:      input.Country,
 		CreatedAt:    input.CreatedAt,
-		TimeSlot:     input.TimeSlot,
+		// TimeSlot:     input.TimeSlot,
 	}
-	err = app.timeslots.IsAvailable(appointment.TimeSlot)
+	err = app.appointments.IsAvailable(appointment.StartTime)
 	if err != nil {
 		if errors.Is(err, models.ErrTimeslotUnavailable) {
-			app.errorResponse(w, r, http.StatusNotFound, "Timeslot is already taken")
+			app.errorResponse(w, r, http.StatusNotFound, "appointment is already taken")
 			return
 		}
 		app.serverErrorResponse(w, r, err)
@@ -158,7 +162,7 @@ func (app *application) createAppointment(w http.ResponseWriter, r *http.Request
 		app.serverErrorResponse(w, r, err)
 		return
 	}
-	app.timeslots.SetToTaken(appointment.TimeSlot)
+	// app.timeslots.SetToTaken(appointment.TimeSlot)
 
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
@@ -284,50 +288,50 @@ func (app *application) updateResult(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (app *application) showTimeslotById(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
-	if err != nil || id < 1 {
-		app.badRequestResponse(w, r, ErrNoSearchQuery)
-		return
-	}
-	timeslot, err := app.timeslots.GetById(id)
-	if err != nil {
-		if errors.Is(err, models.ErrNoRecord) {
+// func (app *application) showTimeslotById(w http.ResponseWriter, r *http.Request) {
+// 	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
+// 	if err != nil || id < 1 {
+// 		app.badRequestResponse(w, r, ErrNoSearchQuery)
+// 		return
+// 	}
+// 	timeslot, err := app.timeslots.GetById(id)
+// 	if err != nil {
+// 		if errors.Is(err, models.ErrNoRecord) {
 
-			app.errorResponse(w, r, http.StatusInternalServerError, "Please go back and make sure your timeslot is still available")
-		} else {
-			app.serverErrorResponse(w, r, err)
-		}
-		return
-	}
+// 			app.errorResponse(w, r, http.StatusInternalServerError, "Please go back and make sure your timeslot is still available")
+// 		} else {
+// 			app.serverErrorResponse(w, r, err)
+// 		}
+// 		return
+// 	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"timeslot": timeslot}, nil)
-	if err != nil {
-		app.serverErrorResponse(w, r, err)
-	}
+// 	err = app.writeJSON(w, http.StatusOK, envelope{"timeslot": timeslot}, nil)
+// 	if err != nil {
+// 		app.serverErrorResponse(w, r, err)
+// 	}
 
-}
-func (app *application) getTimeslotsByDate(w http.ResponseWriter, r *http.Request) {
-	date := r.URL.Query().Get(":date")
-	layout := "2006-01-02T15:04:05.000Z"
-	t, err := time.Parse(layout, date)
+// }
+// func (app *application) getTimeslotsByDate(w http.ResponseWriter, r *http.Request) {
+// 	date := r.URL.Query().Get(":date")
+// 	layout := "2006-01-02T15:04:05.000Z"
+// 	t, err := time.Parse(layout, date)
 
-	timeslots, err := app.timeslots.GetAllByDate(t)
+// 	timeslots, err := app.timeslots.GetAllByDate(t)
 
-	if err != nil {
-		if errors.Is(err, models.ErrNoRecord) {
-			app.notFoundResponse(w, r)
-		} else {
-			app.serverErrorResponse(w, r, err)
-		}
-		return
-	}
-	err = app.writeJSON(w, http.StatusOK, envelope{"appointments": timeslots}, nil)
-	if err != nil {
-		app.serverErrorResponse(w, r, err)
-	}
+// 	if err != nil {
+// 		if errors.Is(err, models.ErrNoRecord) {
+// 			app.notFoundResponse(w, r)
+// 		} else {
+// 			app.serverErrorResponse(w, r, err)
+// 		}
+// 		return
+// 	}
+// 	err = app.writeJSON(w, http.StatusOK, envelope{"appointments": timeslots}, nil)
+// 	if err != nil {
+// 		app.serverErrorResponse(w, r, err)
+// 	}
 
-}
+// }
 
 /// DELETE -- SESSION TRYOUT
 
