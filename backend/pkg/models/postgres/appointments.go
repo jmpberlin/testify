@@ -15,6 +15,7 @@ type AppointmentModel struct {
 	DB *sql.DB
 }
 
+
 func ValidateResultUpdate(v *validation.Validator, appointment *models.Appointment, input *models.ResultInput) {
 	v.Check(appointment.FirstName == input.FirstName, "security check", "appointment details are missing, blank or not correct")
 	v.Check(appointment.LastName == input.LastName, "security check", "appointment details are missing, blank or not correct")
@@ -120,6 +121,36 @@ func (m *AppointmentModel) GetByEmail(email string) (appointment []*models.Appoi
 	}
 
 	return appointmentSlice, nil
+}
+
+func (m *AppointmentModel) GetAllByDate(dateTime time.Time) (appointments []*models.Appointment, err error) {
+	stmt := `
+	SELECT * FROM appointments WHERE start_time::date = $1 ORDER BY start_time ASC;
+	`
+	date := fmt.Sprintf("%d-%d-%d", dateTime.Year(), dateTime.Month(), dateTime.Day())
+	rows, err := m.DB.Query(stmt, date)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	appointmentsSlice := []*models.Appointment{}
+	for rows.Next() {
+		a := &models.Appointment{}
+		err = rows.Scan(&a.ID, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt, &a.StartTime)
+		if err != nil {
+			return nil, err
+		}
+		appointmentsSlice = append(appointmentsSlice, a)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	if len(appointmentsSlice) == 0 {
+		return nil, models.ErrNoRecord
+	}
+
+	return appointmentsSlice, nil
 }
 
 func (m *AppointmentModel) UpdateResult(a *models.Appointment) error {

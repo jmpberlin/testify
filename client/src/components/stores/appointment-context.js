@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// TO-DO: Save the timeslot in context
-// figure out wich timeforat Golang wants the time/date to be in
-// transfer the date when booking an appointment
+// TO-DO: cleanup the different receiver methods, etc. 
 
 const AppointmentContext = React.createContext({
   transmitTimeslotId: () => {},

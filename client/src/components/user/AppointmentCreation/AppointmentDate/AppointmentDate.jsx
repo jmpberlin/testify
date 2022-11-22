@@ -26,32 +26,19 @@ const AppointmentDate = (props) => {
       setSelectedDate(e.target.value);
       let dateObj = new Date(e.target.value);
       axios
-        .get(`/api/v1/Timeslots/show/getByDate/${dateObj.toISOString()}`)
+        .get(`/api/v1/Appointment/show/getByDate/${dateObj.toISOString()}`)
         .then((resFromDb) => {
-          console.log(resFromDb);
-          console.log(typeof resFromDb);
           let timeslotArray = createTimeslotArrayForDate(
             resFromDb.data.appointments,
             dateObj
           );
-          console.log('this is the timeslotArray', timeslotArray);
-          // setTimeSlotArray(resFromDb.data.appointments);
           setTimeSlotArray(timeslotArray);
           setErrorMessage(null);
         })
         .catch((error) => {
-          console.log('running! ');
           let timeslotArray = createTimeslotArrayForDate([], dateObj);
           setErrorMessage(null);
-          console.log('this is the timeslotarray:', timeslotArray);
           setTimeSlotArray(timeslotArray);
-          // console.log(error.response);
-          // if (error.response.status === 404) {
-          //   setErrorMessage(
-          //     'There are no appointments available for the selected date!'
-          //   );
-          //   setTimeSlotArray([]);
-          // }
         });
     }
   };

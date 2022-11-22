@@ -310,27 +310,27 @@ func (app *application) updateResult(w http.ResponseWriter, r *http.Request) {
 // 	}
 
 // }
-// func (app *application) getTimeslotsByDate(w http.ResponseWriter, r *http.Request) {
-// 	date := r.URL.Query().Get(":date")
-// 	layout := "2006-01-02T15:04:05.000Z"
-// 	t, err := time.Parse(layout, date)
+func (app *application) getAppointmentsByDate(w http.ResponseWriter, r *http.Request) {
+	date := r.URL.Query().Get(":date")
+	layout := "2006-01-02T15:04:05.000Z"
+	t, _ := time.Parse(layout, date)
 
-// 	timeslots, err := app.timeslots.GetAllByDate(t)
+	appointments, err := app.appointments.GetAllByDate(t)
 
-// 	if err != nil {
-// 		if errors.Is(err, models.ErrNoRecord) {
-// 			app.notFoundResponse(w, r)
-// 		} else {
-// 			app.serverErrorResponse(w, r, err)
-// 		}
-// 		return
-// 	}
-// 	err = app.writeJSON(w, http.StatusOK, envelope{"appointments": timeslots}, nil)
-// 	if err != nil {
-// 		app.serverErrorResponse(w, r, err)
-// 	}
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFoundResponse(w, r)
+		} else {
+			app.serverErrorResponse(w, r, err)
+		}
+		return
+	}
+	err = app.writeJSON(w, http.StatusOK, envelope{"appointments": appointments}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 
-// }
+}
 
 /// DELETE -- SESSION TRYOUT
 
