@@ -13,7 +13,10 @@ export const createTimeslotArrayForDate = (taken, date) => {
       let newDateObjMinutes = newDateObj.getMinutes();
       let dbHours = new Date(taken[0].start_time).getHours();
       let dbMinutes = new Date(taken[0].start_time).getMinutes();
-
+      //   console.log('this is newDateObjHours: ', newDateObjHours);
+      //   console.log('this is newDateObjMinutes: ', newDateObjMinutes);
+      //   console.log('this is dbMinutes: ', dbMinutes);
+      //   console.log('this is dbHours: ', dbHours);
       if (newDateObjHours === dbHours && newDateObjMinutes === dbMinutes) {
         taken.shift();
         continue;

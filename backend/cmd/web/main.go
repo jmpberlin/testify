@@ -23,7 +23,7 @@ type application struct {
 	session      *scs.SessionManager
 	users        *postgres.UserModel
 	appointments *postgres.AppointmentModel
-	timeslots    *postgres.TimeslotModel
+	// timeslots    *postgres.TimeslotModel
 }
 
 var sessionManager *scs.SessionManager
@@ -64,7 +64,7 @@ func main() {
 		session:      sessionManager,
 		users:        &postgres.UserModel{DB: db},
 		appointments: &postgres.AppointmentModel{DB: db},
-		timeslots:    &postgres.TimeslotModel{DB: db},
+		// timeslots:    &postgres.TimeslotModel{DB: db},
 	}
 
 	// tlsConfig := &tls.Config{

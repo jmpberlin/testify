@@ -6,6 +6,7 @@ const TimeSlot = (props) => {
   const appoCtx = useContext(AppointmentContext);
   const selectAppointmentHandler = () => {
     appoCtx.transmitTimeslotId(props.id);
+    appoCtx.transmitTimeslot(props.start_time);
     appoCtx.transmitHumanTime(`${hours}:${minutes}`);
     appoCtx.transmitHumanDate(dateObj.toLocaleDateString('de-DE', options));
   };
