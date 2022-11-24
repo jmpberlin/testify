@@ -67,7 +67,7 @@ func (m *AppointmentModel) GetByLastName(lastName string) (appointments []*model
 	stmt := `SELECT * FROM appointments WHERE last_name = $1 ORDER BY created_at DESC LIMIT 10`
 	rows, err := m.DB.Query(stmt, lastName)
 	if err != nil {
-		return nil, err
+		return nil, err	
 	}
 	defer rows.Close()
 	appointmentSlice := []*models.Appointment{}
