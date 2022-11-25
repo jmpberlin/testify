@@ -16,7 +16,8 @@ jobs:
             ls -la 
             cd backend
             go build ./cmd/web/*.go 
-            mv ./server ..
+            ls -la 
+            mv ./errors ..
             cd .. 
             ls -la
       - run:
