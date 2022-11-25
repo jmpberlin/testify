@@ -6,7 +6,7 @@ jobs:
     steps:
       - checkout
       # - go/load-cache
-      - go/mod-download
+      # - go/mod-download
       # - go/save-cache
       - run:
           name: 'trying to build the backend'
