@@ -15,7 +15,7 @@ jobs:
             pwd
             ls -la 
             cd backend
-            go build ./cmd/web/*.go -o server
+            go build ./cmd/web/*.go 
             mv ./server ..
             cd .. 
             ls -la
