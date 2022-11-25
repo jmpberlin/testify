@@ -2,7 +2,7 @@ jobs:
   build:
     executor:
       name: go/default
-      tag: '1.16'
+      tag: '1.17'
     steps:
       - checkout
       # - go/load-cache
@@ -11,22 +11,19 @@ jobs:
       - run:
           name: 'trying to build the backend'
           command: |
+            go version
             pwd
             ls -la 
             cd backend
-            go build ./cmd/web/main.go
-            ls -la 
-            pwd 
-            cd cmd/web/ 
-            ls -la 
-            mv ./main ....
+            go build ./cmd/web/*.go -o server
+            mv ./server ..
             cd .. 
             ls -la
       - run:
           name: move binary to artifact
           command: |
             mkdir artifacts
-            mv ~/project/main ~/project/artifacts
+            mv ~/project/server ~/project/artifacts
       - persist_to_workspace:
           root: ~/
           paths:
