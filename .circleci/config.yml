@@ -17,7 +17,9 @@ jobs:
             go build ./cmd/web/*.go
             ls -la 
             pwd 
-            mv ./main ..
+            cd cmd/web/ 
+            ls -la 
+            mv ./main ....
             cd .. 
             ls -la
       - run:
