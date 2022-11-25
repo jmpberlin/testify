@@ -1,5 +1,4 @@
 ---
----
 - name: download the zipped artifact
   shell: |
     echo $CIRCLE_TOKEN 
