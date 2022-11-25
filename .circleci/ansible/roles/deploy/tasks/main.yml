@@ -4,7 +4,7 @@
     echo $CIRCLE_TOKEN 
     echo $CIRCLE_BUILD_NUM
     cd backend
-    curl -H "Circle-Token: $CIRCLE_TOKEN " https://circleci.com/api/v1.1/project/github/jmpberlin/DeployGoApp/$CIRCLE_BUILD_NUM/artifacts | grep -o 'https://[^"]*' | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
+    curl -H "Circle-Token: $CIRCLE_TOKEN " https://circleci.com/api/v1.1/project/github/jmpberlin/testify/$CIRCLE_BUILD_NUM/artifacts | grep -o 'https://[^"]*' | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
 - name: run the backend
   shell: |
     cd backend
