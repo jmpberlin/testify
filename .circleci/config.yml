@@ -46,7 +46,26 @@ jobs:
             ls -ls 
             cd .. 
             apk add --update ansible
+
             ansible-playbook -vv -i ~/project/.circleci/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
+  run-migrations:
+    executor:
+      name: go/default
+      tag: '1.16'
+    steps:
+      - checkout
+      - run:
+          name: 'install golang-migrate'
+          command: |
+            curl -s https://packagecloud.io/install/repositories/golang-migrate/migrate/script.deb.sh | sudo bash
+            sudo apt-get update
+            sudo apt-get install migrate
+      - run:
+          name: 'running the migrations against the database'
+          command: |
+            migrate -version
+            cd backend 
+            migrate -path=./migrations -database=$GREENLIGHT_DB_DSN up
 orbs:
   go: circleci/go@1.7.1
   python: circleci/python@2.1.1
@@ -57,5 +76,6 @@ workflows:
       - build
       - configure the server:
           requires: [build]
+      - run-migrations
 #             # ansible-playbook -vv -i ~/project/.circleci/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
 # cat ~/project/.circleci/ansible/deploy-backend.yml
