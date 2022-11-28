@@ -15,7 +15,6 @@ type AppointmentModel struct {
 	DB *sql.DB
 }
 
-
 func ValidateResultUpdate(v *validation.Validator, appointment *models.Appointment, input *models.ResultInput) {
 	v.Check(appointment.FirstName == input.FirstName, "security check", "appointment details are missing, blank or not correct")
 	v.Check(appointment.LastName == input.LastName, "security check", "appointment details are missing, blank or not correct")
@@ -66,7 +65,7 @@ func (m *AppointmentModel) GetByLastName(lastName string) (appointments []*model
 	stmt := `SELECT * FROM appointments WHERE last_name = $1 ORDER BY created_at DESC LIMIT 10`
 	rows, err := m.DB.Query(stmt, lastName)
 	if err != nil {
-		return nil, err	
+		return nil, err
 	}
 	defer rows.Close()
 	appointmentSlice := []*models.Appointment{}

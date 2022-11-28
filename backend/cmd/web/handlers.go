@@ -316,7 +316,6 @@ func (app *application) getAppointmentsByDate(w http.ResponseWriter, r *http.Req
 	t, _ := time.Parse(layout, date)
 
 	appointments, err := app.appointments.GetAllByDate(t)
-
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			app.notFoundResponse(w, r)
@@ -327,6 +326,7 @@ func (app *application) getAppointmentsByDate(w http.ResponseWriter, r *http.Req
 	}
 	err = app.writeJSON(w, http.StatusOK, envelope{"appointments": appointments}, nil)
 	if err != nil {
+
 		app.serverErrorResponse(w, r, err)
 	}
 

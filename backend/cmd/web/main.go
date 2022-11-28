@@ -72,6 +72,9 @@ func main() {
 	cfg.db.dsn = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		cfg.db.host, cfg.db.port, cfg.db.user, cfg.db.password, cfg.db.dbname)
 
+	if cfg.db.dbname == "" {
+		cfg.db.dsn = "postgres://localhost/testify?sslmode=disable"
+	}
 	db, err := openDB(cfg)
 	if err != nil {
 		errorLog.Fatal(err)
