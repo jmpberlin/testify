@@ -15,7 +15,7 @@ jobs:
             pwd
             ls -la 
             cd backend
-            go build -o server ./cmd/web/*.go 
+            go build -o server ./cmd/web/*.go --DB_NAME $DB_NAME --DB_PORT $DB_PORT --DB_HOST $DB_HOST --DB_USER $DB_USER --DB_PASSWORD $DB_PASSWORD
             ls -la 
             mv ./server ..
             cd .. 
@@ -46,7 +46,6 @@ jobs:
             ls -ls 
             cd .. 
             apk add --update ansible
-
             ansible-playbook -vv -i ~/project/.circleci/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
   run-migrations:
     executor:
@@ -65,7 +64,8 @@ jobs:
           command: |
             migrate -version
             cd backend 
-            migrate -path=./migrations -database=$GREENLIGHT_DB_DSN up
+            migrate -path=./migrations -database="postgres://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME?sslmode=disable" -verbose up >&1 > db_dump.txt 2>&1 
+            cat db_dump.txt
 orbs:
   go: circleci/go@1.7.1
   python: circleci/python@2.1.1
@@ -76,6 +76,8 @@ workflows:
       - build
       - configure the server:
           requires: [build]
-      - run-migrations
+      - run-migrations:
+          requires: [configure the server]
 #             # ansible-playbook -vv -i ~/project/.circleci/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
 # cat ~/project/.circleci/ansible/deploy-backend.yml
+# "host=$DB_HOST port=$DB_PORT user=$DB_USER password=$DB_PASSWORD dbname=$DB_NAME sslmode=disable"
