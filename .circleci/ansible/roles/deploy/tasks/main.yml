@@ -9,8 +9,13 @@
   shell: |
     cd backend
     chmod +x server
-    ./server
+    ./server --DB_NAME=$DB_NAME --DB_PORT=$DB_PORT --DB_HOST=$DB_HOST --DB_USER=$DB_USER --DB_PASSWORD=$DB_PASSWORD
   environment:
     CIRCLE_TOKEN: "{{ lookup('env', 'CIRCLE_TOKEN')}}"
     CIRCLE_BUILD_NUM: "{{ lookup('env', 'CIRCLE_BUILD_NUM')}}"
+    DB_NAME: "{{ lookup('env', 'DB_NAME')}}"
+    DB_PORT: "{{ lookup('env', 'DB_PORT')}}"
+    DB_HOST: "{{ lookup('env', 'DB_HOST')}}"
+    DB_USER: "{{ lookup('env', 'DB_USER')}}"
+    DB_PASSWORD: "{{ lookup('env', 'DB_PASSWORD')}}"
 #
