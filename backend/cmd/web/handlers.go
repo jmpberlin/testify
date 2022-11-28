@@ -120,7 +120,7 @@ func (app *application) createAppointment(w http.ResponseWriter, r *http.Request
 	err := DecodeJSONBody(w, r, &input)
 	if err != nil {
 		// print potential error
-		fmt.Println(err)
+		fmt.Println("there was an err in decoding the json body into the input struct", err)
 		app.badRequestResponse(w, r, err)
 		return
 	}

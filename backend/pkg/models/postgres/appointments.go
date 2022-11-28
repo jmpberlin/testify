@@ -54,7 +54,6 @@ func (m *AppointmentModel) IsAvailable(inputTime time.Time) error {
 	datePlusFive := fmt.Sprintf("%d-%d-%d %d:%d", inputTimePlusFive.Year(), inputTimePlusFive.Month(), inputTimePlusFive.Day(), inputTimePlusFive.Hour(), inputTimePlusFive.Minute())
 	a := &models.Appointment{}
 	err := m.DB.QueryRow(stmt, date, datePlusFive).Scan(&a.ID, &a.StartTime, &a.FirstName, &a.LastName, &a.Email, &a.Duration, &a.Service, &a.Result, &a.AddressName, &a.StreetName, &a.StreetNumber, &a.ZipCode, &a.City, &a.Country, &a.CreatedAt, &a.UpdatedAt)
-	fmt.Println(a)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil
