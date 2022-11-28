@@ -1,0 +1,81 @@
+jobs:
+  build:
+    executor:
+      name: go/default
+      tag: '1.17'
+    steps:
+      - checkout
+      # - go/load-cache
+      # - go/mod-download
+      # - go/save-cache
+      - run:
+          name: 'trying to build the backend'
+          command: |
+            go version
+            pwd
+            ls -la 
+            cd backend
+            go build -o server ./cmd/web/*.go 
+            ls -la 
+            mv ./server ..
+            cd .. 
+            ls -la
+      - run:
+          name: move binary to artifact
+          command: |
+            mkdir artifacts
+            mv ~/project/server ~/project/artifacts
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/artifacts
+  configure the server:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - store_artifacts:
+          path: ~/project/artifacts
+      - run:
+          name: download and run the server on the ec2-instance
+          command: |
+            pwd 
+            cd artifacts
+            ls -ls 
+            cd .. 
+            apk add --update ansible
+
+            ansible-playbook -vv -i ~/project/.circleci/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
+  run-migrations:
+    executor:
+      name: go/default
+      tag: '1.16'
+    steps:
+      - checkout
+      - run:
+          name: 'install golang-migrate'
+          command: |
+            curl -s https://packagecloud.io/install/repositories/golang-migrate/migrate/script.deb.sh | sudo bash
+            sudo apt-get update
+            sudo apt-get install migrate
+      - run:
+          name: 'running the migrations against the database'
+          command: |
+            migrate -version
+            cd backend 
+            migrate -path=./migrations -database=$GREENLIGHT_DB_DSN up
+orbs:
+  go: circleci/go@1.7.1
+  python: circleci/python@2.1.1
+version: 2.1
+workflows:
+  main:
+    jobs:
+      - build
+      - configure the server:
+          requires: [build]
+      - run-migrations
+#             # ansible-playbook -vv -i ~/project/.circleci/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
+# cat ~/project/.circleci/ansible/deploy-backend.yml

@@ -1,0 +1,20 @@
+---
+- name: 'configuration play.'
+  hosts: web
+  user: ubuntu
+  become: true
+  become_user: root
+  gather_facts: false
+  vars:
+    - ansible_python_interpreter: /usr/bin/python3
+    - ansible_host_key_checking: false
+    - ansible_stdout_callback: yaml
+
+  environment:
+    - CIRCLE_TOKEN: "{{ lookup('env', 'CIRCLE_TOKEN')}}"
+    - CIRCLE_BUILD_NUM: "{{ lookup('env', 'CIRCLE_BUILD_NUM')}}"
+  pre_tasks:
+    - name: 'wait 2o seconds for the artifacts to be uploaded'
+      shell: sleep 20s
+  roles:
+    - deploy
