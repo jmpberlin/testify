@@ -87,6 +87,10 @@ jobs:
           fingerprints:
             - '4d:de:35:9b:0c:52:1d:2f:52:d4:00:48:3f:08:d7:2b'
       - run:
+          name: install tar & gzip
+          command: |
+            yum -y install tar gzip
+      - run:
           name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy --template-file .circleci/files/backend_stack.yml --tags project="testify" --stack-name "testify-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
