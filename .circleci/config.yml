@@ -89,11 +89,11 @@ jobs:
       - run:
           name: Ensure back-end infrastructure exists
           command: |
-            aws cloudformation deploy --template-file .circleci/files/backend-stack.yml --tags project="testify" --stack-name "testify-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation deploy --template-file .circleci/files/backend_stack.yml --tags project="testify" --stack-name "testify-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
           name: Ensure front-end infrastructure exist
           command: |
-            aws cloudformation deploy --template-file .circleci/files/frontend-stack.yml --tags project="testify" --stack-name "testify-frontend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+            aws cloudformation deploy --template-file .circleci/files/frontend_stack.yml --tags project="testify" --stack-name "testify-frontend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
           name: pwd log
           command: |
@@ -149,11 +149,11 @@ version: 2.1
 workflows:
   main:
     jobs:
-      - build-backend
+      # - build-backend
       # - run-migrations:
       #     requires: [build-backend]
-      - create-infrastructure:
-          requires: [build-backend]
+      - create-infrastructure
+        # requires: [build-backend]
       - deploy-backend:
           requires: [create-infrastructure]
           # filters:
