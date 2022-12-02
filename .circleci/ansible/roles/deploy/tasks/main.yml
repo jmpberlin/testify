@@ -11,7 +11,7 @@
     chmod +x server
 - name: echo db host
   shell: |
-    echo $DB_HOST
+    echo $CIRCLE_TOKEN
 - name: create the en File
   shell: |
     mkdir /etc/testify
@@ -21,6 +21,13 @@
     echo "DB_PASSWORD=${DB_PASSWORD}" >> /etc/testify/env
     echo "DB_USER=${DB_USER}" >> /etc/testify/env
     echo "DB_PORT=${DB_PORT}" >> /etc/testify/env
+  environment:
+    DB_NAME: "{{ lookup('env', 'DB_NAME')}}"
+    DB_PORT: "{{ lookup('env', 'DB_PORT')}}"
+    DB_HOST: "{{ lookup('env', 'DB_HOST')}}"
+    DB_USER: "{{ lookup('env', 'DB_USER')}}"
+    DB_PASSWORD: "{{ lookup('env', 'DB_PASSWORD')}}"
+
 - name: create the systemd service file
   shell: |
     touch /etc/systemd/system/testify.service 
@@ -29,7 +36,7 @@
     Wants=network.target\n
     After=network.target\n
     StartLimitIntervalSec=600\n
-    StartLimitBurst=5\nsy
+    StartLimitBurst=5\n
     [Service]\n
     Type=exec\n
     DynamicUser=yes\n
