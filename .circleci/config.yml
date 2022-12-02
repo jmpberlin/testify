@@ -129,6 +129,11 @@ jobs:
       - store_artifacts:
           path: ~/project/artifacts
       - run:
+          name: Install aws-cli
+          command: |
+            pip install --upgrade pip
+            pip install awscli
+      - run:
           name: download and run the server on the ec2-instance
           command: |
             pwd 
@@ -136,7 +141,7 @@ jobs:
             ls -ls 
             cd .. 
             apk add --update ansible
-            cat inventory.txt
+            cat ~/project/.circleci/ansible/inventory.txt
             ansible-playbook -vv -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
       - destroy-environment
   smoke-test-backend:
