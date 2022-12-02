@@ -19,11 +19,6 @@ import (
 
 // var sessionManager *scs.SessionManager
 
-// Question: Checkout main branch , check if everything works correctly
-// Circleci branch - alle veränderungen speichern.
-// test: entweder stash alle commmits, dann pull, dann wiederholen
-// oder branch löschen und die veränderungen in neuem Branch wiederholen!
-
 type application struct {
 	errorLog     *log.Logger
 	infoLog      *log.Logger
@@ -49,6 +44,8 @@ type config struct {
 var sessionManager *scs.SessionManager
 
 func main() {
+	// TO-DO: FRONTEND AND BACKEND Interprets the time differently: Frontend displays created dates an hour later than it should.. Or does it?
+	// TO-DO: Create the Deploy script so it does create the service file and the env file and starts the server as a systemd service!
 
 	var cfg config
 

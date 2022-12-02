@@ -5,11 +5,47 @@
     echo $CIRCLE_BUILD_NUM
     cd backend
     curl -H "Circle-Token: $CIRCLE_TOKEN " https://circleci.com/api/v1.1/project/github/jmpberlin/testify/$CIRCLE_BUILD_NUM/artifacts | grep -o 'https://[^"]*' | wget --verbose --header "Circle-Token: $CIRCLE_TOKEN" --input-file -
-- name: run the backend
+- name: chmod the backend
   shell: |
     cd backend
     chmod +x server
-    ./server --DB_NAME=$DB_NAME --DB_PORT=$DB_PORT --DB_HOST=$DB_HOST --DB_USER=$DB_USER --DB_PASSWORD=$DB_PASSWORD
+- name: create the en File
+  shell: |
+    mkdir /etc/testify
+    touch /etc/testify/env 
+    echo "DB_HOST=$DB_HOST" >> /etc/testify/env 
+    echo "DB_NAME=$DB_NAME" >> /etc/testify/env
+    echo "DB_PASSWORD=$DB_PASSWORD" >> /etc/testify/env
+    echo "DB_USER=$DB_USER" >> /etc/testify/env
+    echo "DB_PORT=$DB_PORT" >> /etc/testify/env
+- name: create the systemd service file
+  shell: |
+    touch /etc/systemd/system/testify.service 
+    echo '[Unit]\n
+    Description=TESTIFY backend API\n
+    Wants=network.target\n
+    After=network.target\n
+    StartLimitIntervalSec=600\n
+    StartLimitBurst=5\n
+    [Service]\n
+    Type=exec\n
+    DynamicUser=yes\n
+    WorkingDirectory=/home/ubuntu/backend\n
+    EnvironmentFile=/etc/go_backend_server_env/env\n
+    ExecStart=/home/ubuntu/backend/server \
+      --DB_HOST=${DB_HOST} \
+      --DB_NAME=${DB_NAME} \
+      --DB_PASSWORD=${DB_PASSWORD} \
+      --DB_USER=${DB_USER} \
+      --DB_PORT=${DB_PORT} \
+    Restart=on-failure\n
+    RestartSec=3\n
+    [Install]\n
+    WantedBy=multi-user.target'>>/etc/systemd/system/testify.service
+- name: register the systemd service
+  shell: |
+    systemctl daemon-reload 
+    systemctl start testify.service
   environment:
     CIRCLE_TOKEN: "{{ lookup('env', 'CIRCLE_TOKEN')}}"
     CIRCLE_BUILD_NUM: "{{ lookup('env', 'CIRCLE_BUILD_NUM')}}"
@@ -19,3 +55,4 @@
     DB_USER: "{{ lookup('env', 'DB_USER')}}"
     DB_PASSWORD: "{{ lookup('env', 'DB_PASSWORD')}}"
 #
+# ./server --DB_NAME=$DB_NAME --DB_PORT=$DB_PORT --DB_HOST=$DB_HOST --DB_USER=$DB_USER --DB_PASSWORD=$DB_PASSWORD

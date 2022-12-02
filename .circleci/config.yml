@@ -77,8 +77,8 @@ workflows:
       - build
       - configure the server:
           requires: [build]
-      - run-migrations:
-          requires: [configure the server]
+      # - run-migrations:
+      #     requires: [configure the server]
 #             # ansible-playbook -vv -i ~/project/.circleci/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
 # cat ~/project/.circleci/ansible/deploy-backend.yml
 # "host=$DB_HOST port=$DB_PORT user=$DB_USER password=$DB_PASSWORD dbname=$DB_NAME sslmode=disable"
