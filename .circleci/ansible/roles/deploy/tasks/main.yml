@@ -9,15 +9,18 @@
   shell: |
     cd backend
     chmod +x server
+- name: echo db host
+  shell: |
+    echo $DB_HOST
 - name: create the en File
   shell: |
     mkdir /etc/testify
     touch /etc/testify/env 
-    echo "DB_HOST=$DB_HOST" >> /etc/testify/env 
-    echo "DB_NAME=$DB_NAME" >> /etc/testify/env
-    echo "DB_PASSWORD=$DB_PASSWORD" >> /etc/testify/env
-    echo "DB_USER=$DB_USER" >> /etc/testify/env
-    echo "DB_PORT=$DB_PORT" >> /etc/testify/env
+    echo "DB_HOST=${DB_HOST}" >> /etc/testify/env 
+    echo "DB_NAME=${DB_NAME}" >> /etc/testify/env
+    echo "DB_PASSWORD=${DB_PASSWORD}" >> /etc/testify/env
+    echo "DB_USER=${DB_USER}" >> /etc/testify/env
+    echo "DB_PORT=${DB_PORT}" >> /etc/testify/env
 - name: create the systemd service file
   shell: |
     touch /etc/systemd/system/testify.service 
@@ -26,12 +29,12 @@
     Wants=network.target\n
     After=network.target\n
     StartLimitIntervalSec=600\n
-    StartLimitBurst=5\n
+    StartLimitBurst=5\nsy
     [Service]\n
     Type=exec\n
     DynamicUser=yes\n
     WorkingDirectory=/home/ubuntu/backend\n
-    EnvironmentFile=/etc/go_backend_server_env/env\n
+    EnvironmentFile=/etc/testify/env\n
     ExecStart=/home/ubuntu/backend/server \
       --DB_HOST=${DB_HOST} \
       --DB_NAME=${DB_NAME} \
