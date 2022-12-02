@@ -145,7 +145,7 @@ workflows:
   main:
     jobs:
       - build-backend
-      - run-mirgrations:
+      - run-migrations:
           requires: [build-backend]
       - create-infrastructure:
           requires: [run-migrations]
