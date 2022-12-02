@@ -1,5 +1,17 @@
+commands:
+  destroy-environment:
+    description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
+    steps:
+      - run:
+          name: Destroy environments
+          when: on_fail
+          command: |
+            echo "Destroy environment: ${CIRCLE_WORKFLOW_ID:0:7}"
+            aws s3 rm s3://testify-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            aws cloudformation delete-stack --stack-name "testify-backend-${CIRCLE_WORKFLOW_ID:0:7}"  
+            aws cloudformation delete-stack --stack-name "testify-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
 jobs:
-  build:
+  build-backend:
     executor:
       name: go/default
       tag: '1.17'
@@ -30,24 +42,6 @@ jobs:
           root: ~/
           paths:
             - project/artifacts
-  configure the server:
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/
-      - store_artifacts:
-          path: ~/project/artifacts
-      - run:
-          name: download and run the server on the ec2-instance
-          command: |
-            pwd 
-            cd artifacts
-            ls -ls 
-            cd .. 
-            apk add --update ansible
-            ansible-playbook -vv -i ~/project/.circleci/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
   run-migrations:
     executor:
       name: go/default
@@ -66,7 +60,83 @@ jobs:
             migrate -version
             cd backend 
             migrate -path=./migrations -database="postgres://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME?sslmode=disable" -verbose up >&1 > db_dump.txt 2>&1 
+            if (grep -q -E -i 'error\|failed\|force' ./db_dump.txt) 
+            then 
+              curl https://kvdb.io/MfuFTtcrnEYNxTz4nHT51E/migrations_${CIRCLE_WORKFLOW_ID:0:7} -d '0'
+              fi
+            if (grep -q -E -i 'Finished' ./db_dump.txt) 
+            then 
+              curl https://kvdb.io/MfuFTtcrnEYNxTz4nHT51E/migrations_${CIRCLE_WORKFLOW_ID:0:7} -d '2'
+            if (grep -q -E -i 'no change' ./db_dump.txt)
+            then 
+              curl https://kvdb.io/MfuFTtcrnEYNxTz4nHT51E/migrations_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
+            fi
             cat db_dump.txt
+
+  create-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - '4d:de:35:9b:0c:52:1d:2f:52:d4:00:48:3f:08:d7:2b'
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy --template-file .circleci/files/backend-stack.yml --tags project="testify" --stack-name "testify-backend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy --template-file .circleci/files/frontend-stack.yml --tags project="testify" --stack-name "testify-frontend-${CIRCLE_WORKFLOW_ID:0:7}" --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+          name: pwd log
+          command: |
+            pwd
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            echo "[web]" > ~/project/.circleci/ansible/inventory.txt
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicDnsName' --filter Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} --output text >> ~/project/.circleci/ansible/inventory.txt
+      - run:
+          name: read the inventory file to the console
+          command: |
+            cat ~/project/.circleci/ansible/inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
+      - destroy-environment
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - '4d:de:35:9b:0c:52:1d:2f:52:d4:00:48:3f:08:d7:2b'
+      - attach_workspace:
+          at: ~/
+      - store_artifacts:
+          path: ~/project/artifacts
+      - run:
+          name: download and run the server on the ec2-instance
+          command: |
+            pwd 
+            cd artifacts
+            ls -ls 
+            cd .. 
+            apk add --update ansible
+            ansible-playbook -vv -i ~/project/.circleci/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
+      - destroy-environment
+  smoke-test-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - run:
+          name: 'here goes the smoketest'
+          command: echo "SMOKETEST"
 orbs:
   go: circleci/go@1.7.1
   python: circleci/python@2.1.1
@@ -74,11 +144,23 @@ version: 2.1
 workflows:
   main:
     jobs:
-      - build
-      - configure the server:
-          requires: [build]
-      # - run-migrations:
-      #     requires: [configure the server]
-#             # ansible-playbook -vv -i ~/project/.circleci/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
-# cat ~/project/.circleci/ansible/deploy-backend.yml
-# "host=$DB_HOST port=$DB_PORT user=$DB_USER password=$DB_PASSWORD dbname=$DB_NAME sslmode=disable"
+      - build-backend
+      - run-mirgrations:
+          requires: [build-backend]
+      - create-infrastructure:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [create-infrastructure]
+          # filters:
+          #   branches:
+          #     only: [master]
+      - smoke-test-backend:
+          requires: [deploy-backend]
+      # - test-frontend:
+      #     requires: [smoke-test-backend]
+      # - build-and-deploy-frontend:
+      #     requires: [test-frontend]
+      # - smoke-test-frontend:
+      #     requires: [build-and-deploy-frontend]
+      # - blue-to-green:
+      #     requires: [smoke-test-frontend]
