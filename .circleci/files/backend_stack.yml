@@ -28,7 +28,7 @@ Resources:
       InstanceType: t2.micro
       SecurityGroups:
         - Ref: InstanceSecurityGroup
-      KeyName: testify_24112022
+      KeyName: testify24112022
       ImageId: ami-09c5ba4f838d8684a
       Tags:
         - Key: Name
