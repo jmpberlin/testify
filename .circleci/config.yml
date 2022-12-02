@@ -153,13 +153,13 @@ version: 2.1
 workflows:
   main:
     jobs:
-      # - build-backend
+      - build-backend
       # - run-migrations:
       #     requires: [build-backend]
-      - create-infrastructure
-        # requires: [build-backend]
+      - create-infrastructure:
+          requires: [build-backend]
       - deploy-backend:
-          requires: [create-infrastructure]
+          requires: [create-infrastructure, build-backend]
           # filters:
           #   branches:
           #     only: [master]
