@@ -143,7 +143,7 @@ jobs:
             apk add --update ansible
             cat ~/project/.circleci/ansible/inventory.txt
             ansible-playbook -vv -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/deploy-backend.yml
-      # - destroy-environment
+      - destroy-environment
   smoke-test-backend:
     docker:
       - image: python:3.7-alpine3.11
