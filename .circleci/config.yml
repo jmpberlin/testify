@@ -150,10 +150,10 @@ workflows:
   main:
     jobs:
       - build-backend
-      - run-migrations:
-          requires: [build-backend]
+      # - run-migrations:
+      #     requires: [build-backend]
       - create-infrastructure:
-          requires: [run-migrations]
+          requires: [build-backend]
       - deploy-backend:
           requires: [create-infrastructure]
           # filters:
