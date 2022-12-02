@@ -63,14 +63,12 @@ jobs:
             if (grep -q -E -i 'error\|failed\|force' ./db_dump.txt) 
             then 
               curl https://kvdb.io/MfuFTtcrnEYNxTz4nHT51E/migrations_${CIRCLE_WORKFLOW_ID:0:7} -d '0'
-              fi
             if (grep -q -E -i 'Finished' ./db_dump.txt) 
             then 
               curl https://kvdb.io/MfuFTtcrnEYNxTz4nHT51E/migrations_${CIRCLE_WORKFLOW_ID:0:7} -d '2'
             if (grep -q -E -i 'no change' ./db_dump.txt)
             then 
               curl https://kvdb.io/MfuFTtcrnEYNxTz4nHT51E/migrations_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
-            fi
       - run:
           name: 'cat the db_dump file '
           command: |
