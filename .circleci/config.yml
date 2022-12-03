@@ -178,10 +178,11 @@ jobs:
             export BACKEND_DNS=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicDnsName' --filter Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} --output text)
             export REACT_APP_API_ENDPOINT="http://${BACKEND_DNS}:${API_PORT}"
             echo "${REACT_APP_API_ENDPOINT}"
+            export CI=false
             cd client
             npm install
             npm run build
-            aws s3 cp dist s3://testify-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+            aws s3 cp build/. s3://testify-${CIRCLE_WORKFLOW_ID:0:7} --recursive
 
 orbs:
   go: circleci/go@1.7.1
