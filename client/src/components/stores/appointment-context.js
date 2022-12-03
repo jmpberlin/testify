@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// TO-DO: cleanup the different receiver methods, etc. 
+// TO-DO: cleanup the different receiver methods, etc.
 
 const AppointmentContext = React.createContext({
   transmitTimeslotId: () => {},

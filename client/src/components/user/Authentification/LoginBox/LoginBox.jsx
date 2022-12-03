@@ -6,6 +6,8 @@ import BackgroundWrapper from '../../../UI/Wrappers/BackgroundWrapper/Background
 import axios from 'axios';
 
 const LoginBox = () => {
+  const API = process.env.REACT_APP_API_ENDPOINT;
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -25,7 +27,7 @@ const LoginBox = () => {
   };
   const logInUser = () => {
     axios
-      .post('/api/v1/user/login', {
+      .post(`${API}/api/v1/user/login`, {
         email: email,
         pw: password,
       })
@@ -37,12 +39,12 @@ const LoginBox = () => {
       });
   };
   const getHandler = () => {
-    axios.get('/api/v1/get/').then((resFromDb) => {
+    axios.get(`${API}/api/v1/get/`).then((resFromDb) => {
       console.log(resFromDb);
     });
   };
   const putHandler = () => {
-    axios.get('/api/v1/put/').then((resFromDb) => {
+    axios.get(`${API}/api/v1/put/`).then((resFromDb) => {
       console.log(resFromDb);
     });
   };

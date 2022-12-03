@@ -9,6 +9,8 @@ import AppointmentDetailsEditForm from '../../../UI/Appointments/AppointmentDeta
 import axios from 'axios';
 import InputError from '../../../UI/Errors/InputError/InputError';
 const AppointmentDetails = () => {
+  const API = process.env.REACT_APP_API_ENDPOINT;
+
   const appoCtx = useContext(AppointmentContext);
   const navigator = useNavigate();
   function onClickBackHandler() {
@@ -32,14 +34,12 @@ const AppointmentDetails = () => {
   function bookAppointmentHandler() {
     const appointment = appoCtx.getAppointmentDetails();
 
-    console.log(appointment.start_time);
     axios
-      .post('/api/v1/Appointment/Create', appointment)
+      .post(`${API}/api/v1/Appointment/Create`, appointment)
       .then((resFromApi) => {
         navigator('/appointments/confirmation');
       })
       .catch((error) => {
-        console.log(error.response.data);
         setBookingError(true);
         setBookingErrorMessage(error.response.data.error);
       });

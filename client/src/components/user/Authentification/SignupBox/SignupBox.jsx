@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import BackgroundWrapper from '../../../UI/Wrappers/BackgroundWrapper/BackgroundWrapper';
 const SignupBox = () => {
+  const API = process.env.REACT_APP_API_ENDPOINT;
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -32,7 +34,7 @@ const SignupBox = () => {
   };
   const signUpUser = () => {
     axios
-      .post('/api/v1/user/signup', {
+      .post(`${API}/api/v1/user/signup`, {
         email: email,
         pw: password,
         first_name: firstName,
