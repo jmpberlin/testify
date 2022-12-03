@@ -1,2 +1,0 @@
-[web]
-ec2-3-75-135-94.eu-central-1.compute.amazonaws.com

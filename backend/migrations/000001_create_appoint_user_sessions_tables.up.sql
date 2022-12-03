@@ -16,4 +16,19 @@ CREATE TABLE appointments (
     updated_at timestamp(0) with time zone NOT NULL DEFAULT now(),
     start_time timestamp(0) with time zone NOT NULL DEFAULT now()
 );
-CREATE UNIQUE INDEX appointments_pkey ON appointments(id int8_ops);
+
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY,
+    first_name text NOT NULL,
+    last_name text NOT NULL,
+    email text NOT NULL UNIQUE,
+    hashed_password text NOT NULL,
+    created_at timestamp(0) with time zone NOT NULL DEFAULT now(),
+    active boolean NOT NULL DEFAULT true,
+    role text NOT NULL DEFAULT 'employee'::text
+);
+CREATE TABLE sessions (
+    token text PRIMARY KEY,
+    data bytea NOT NULL,
+    expiry timestamp with time zone NOT NULL
+);
