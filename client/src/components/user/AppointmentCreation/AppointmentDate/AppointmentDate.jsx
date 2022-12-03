@@ -8,6 +8,10 @@ import TimeSlotWrapper from './TimeSlotWrapper/TimeSlotWrapper';
 import AppointmentContext from '../../../stores/appointment-context';
 import { createTimeslotArrayForDate } from '../../../../helpers/timeslot-creator';
 const AppointmentDate = (props) => {
+  console.log(
+    'this is the process.env.REACT_APP_API_ENDPOINT: ',
+    process.env.REACT_APP_API_ENDPOINT
+  );
   const appoCtx = useContext(AppointmentContext);
 
   const [selectedDate, setSelectedDate] = useState();
@@ -25,6 +29,8 @@ const AppointmentDate = (props) => {
     if (e.target.value && e.target.value !== selectedDate) {
       setSelectedDate(e.target.value);
       let dateObj = new Date(e.target.value);
+      // TO-DO: .get(`${process.env.REACT_APP_API_ENDPOINT}/api/v1....)
+      // REMOVE // "proxy": "http://localhost:4000/" from package.json
       axios
         .get(`/api/v1/Appointment/show/getByDate/${dateObj.toISOString()}`)
         .then((resFromDb) => {

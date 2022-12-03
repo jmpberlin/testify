@@ -152,6 +152,37 @@ jobs:
       - run:
           name: 'here goes the smoketest'
           command: echo "SMOKETEST"
+  build-and-deploy-frontend:
+    docker:
+      - image: cimg/aws:2022.06
+    steps:
+      - checkout
+      - run:
+          name: install tar & gzip
+          command: |
+            sudo npm install -g tar
+      - run:
+          name: install gzip
+          command: |
+            sudo npm install -g gzip
+
+      - run:
+          name: install python
+          command: |
+            sudo npm install -g python
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Get backend url
+          command: |
+            export BACKEND_DNS=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicDnsName' --filter Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} --output text)
+            export REACT_APP_API_ENDPOINT="http://${BACKEND_DNS}:${API_PORT}"
+            echo "${REACT_APP_API_ENDPOINT}"
+            cd client
+            npm install
+            npm run build
+            aws s3 cp dist s3://testify-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+
 orbs:
   go: circleci/go@1.7.1
   python: circleci/python@2.1.1
@@ -173,8 +204,8 @@ workflows:
           requires: [deploy-backend]
       # - test-frontend:
       #     requires: [smoke-test-backend]
-      # - build-and-deploy-frontend:
-      #     requires: [test-frontend]
+      - build-and-deploy-frontend:
+          requires: [smoke-test-backend]
       # - smoke-test-frontend:
       #     requires: [build-and-deploy-frontend]
       # - blue-to-green:
