@@ -8,10 +8,6 @@ import TimeSlotWrapper from './TimeSlotWrapper/TimeSlotWrapper';
 import AppointmentContext from '../../../stores/appointment-context';
 import { createTimeslotArrayForDate } from '../../../../helpers/timeslot-creator';
 const AppointmentDate = (props) => {
-  // console.log(
-  //   'this is the process.env.REACT_APP_API_ENDPOINT: ',
-  //   process.env.REACT_APP_API_ENDPOINT
-  // );
   const API = process.env.REACT_APP_API_ENDPOINT;
   const appoCtx = useContext(AppointmentContext);
 
